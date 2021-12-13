@@ -26,6 +26,13 @@ public class Flat {
     )
     private Set<Facility> facilities = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "flat_image",
+            joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "flat_id", referencedColumnName = "id")
+    )
+    private Set<Image> images = new HashSet<>();
+
     public Flat() {
     }
 
@@ -111,6 +118,18 @@ public class Flat {
         this.facilities.add(facility);
     }
 
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
+    public void addImage(Image image) {
+        this.images.add(image);
+    }
+
     @Override
     public String toString() {
         return "Flat{" +
@@ -121,6 +140,7 @@ public class Flat {
                 ", description='" + description + '\'' +
                 ", address=" + address +
                 ", facilities=" + facilities +
+                ", images=" + images +
                 '}';
     }
 }
