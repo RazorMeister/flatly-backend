@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pw2021.backend.Flatly.enities.Facility;
 import pw2021.backend.Flatly.enities.Flat;
+import pw2021.backend.Flatly.enities.Image;
 import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
-import pw2021.backend.Flatly.repositories.FacilityRepository;
 import pw2021.backend.Flatly.repositories.FlatRepository;
 
 import javax.transaction.Transactional;
@@ -19,22 +19,39 @@ import java.util.Set;
 public class FlatService {
     private final FlatRepository flatRepository;
     private final FacilityService facilityService;
+    private final ImageService imageService;
 
     @Autowired
-    public FlatService(FlatRepository flatRepository, FacilityService facilityService) {
+    public FlatService(
+            FlatRepository flatRepository,
+            FacilityService facilityService,
+            ImageService imageService
+    ) {
         this.flatRepository = flatRepository;
         this.facilityService = facilityService;
+        this.imageService = imageService;
     }
 
-    private Flat saveWithFacilities(Flat flat) throws UnprocessableEntityException {
+    private Flat saveWithFacilitiesAndImages(Flat flat) throws UnprocessableEntityException {
         Set<Facility> facilitiesToSave = flat.getFacilities();
+        Set<Image> imagesToSave = flat.getImages();
         flat.setFacilities(new HashSet<>());
+
+        flat.setImages(new HashSet<>());
 
         Flat savedFlat = this.flatRepository.save(flat);
 
         for (Facility facility : facilitiesToSave) {
             try {
                 savedFlat.addFacility(this.facilityService.getFacility(facility.getId()));
+            } catch (NotFoundException e) {
+                throw new UnprocessableEntityException(e);
+            }
+        }
+
+        for (Image image : imagesToSave) {
+            try {
+                savedFlat.addImage(this.imageService.getImage(image.getId()));
             } catch (NotFoundException e) {
                 throw new UnprocessableEntityException(e);
             }
@@ -58,7 +75,7 @@ public class FlatService {
 
     @Transactional
     public Flat storeFlat(Flat flat) throws UnprocessableEntityException {
-        return this.saveWithFacilities(flat);
+        return this.saveWithFacilitiesAndImages(flat);
     }
 
     @Transactional
@@ -71,8 +88,9 @@ public class FlatService {
         flat.setArea(newFlat.getArea());
         flat.setAddress(newFlat.getAddress());
         flat.setFacilities(newFlat.getFacilities());
+        flat.setImages(newFlat.getImages());
 
-        return this.saveWithFacilities(flat);
+        return this.saveWithFacilitiesAndImages(flat);
     }
 
     public void deleteFlat(long flatId) throws NotFoundException {
