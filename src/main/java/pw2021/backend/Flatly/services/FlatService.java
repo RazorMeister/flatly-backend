@@ -13,6 +13,7 @@ import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
 import pw2021.backend.Flatly.repositories.FlatRepository;
 import pw2021.backend.Flatly.responses.PaginationData;
 import pw2021.backend.Flatly.responses.PaginationResponse;
+import pw2021.backend.Flatly.utils.DataConverter;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -109,5 +110,10 @@ public class FlatService {
     public void deleteFlat(long flatId) throws NotFoundException {
         Flat flat = this.getFlat(flatId);
         this.flatRepository.delete(flat);
+    }
+
+    @Transactional
+    public void setFlatsInactiveAfterEndDateTime() {
+        this.flatRepository.setInactiveAfterEndDateTime(DataConverter.convertToLocalDateTime(new Date()));
     }
 }
