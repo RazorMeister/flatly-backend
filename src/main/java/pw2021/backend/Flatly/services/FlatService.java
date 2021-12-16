@@ -1,6 +1,9 @@
 package pw2021.backend.Flatly.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pw2021.backend.Flatly.enities.Facility;
 import pw2021.backend.Flatly.enities.Flat;
@@ -8,18 +11,19 @@ import pw2021.backend.Flatly.enities.Image;
 import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
 import pw2021.backend.Flatly.repositories.FlatRepository;
+import pw2021.backend.Flatly.responses.PaginationData;
+import pw2021.backend.Flatly.responses.PaginationResponse;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class FlatService {
     private final FlatRepository flatRepository;
     private final FacilityService facilityService;
     private final ImageService imageService;
+
+    private final Integer RECORDS_ON_PAGE = 10;
 
     @Autowired
     public FlatService(
@@ -60,8 +64,13 @@ public class FlatService {
         return this.flatRepository.save(savedFlat);
     }
 
-    public List<Flat> getFlats() {
-        return this.flatRepository.findAll();
+    public PaginationResponse<List<Flat>> getFlats(Optional<Integer> page, Optional<String> search) {
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, this.RECORDS_ON_PAGE);
+        Page<Flat> flatsPage = this.flatRepository.findFlatsByName(search.orElse(""), pageable);
+        return new PaginationResponse<>(
+                flatsPage.getContent(),
+                new PaginationData(flatsPage)
+        );
     }
 
     public Flat getFlat(long id) throws NotFoundException {
@@ -84,6 +93,10 @@ public class FlatService {
 
         flat.setName(newFlat.getName());
         flat.setDescription(newFlat.getDescription());
+        flat.setNumberOfGuests(newFlat.getNumberOfGuests());
+        flat.setActive(newFlat.getActive());
+        flat.setStartDateTime(newFlat.getStartDateTime());
+        flat.setEndDateTime(newFlat.getEndDateTime());
         flat.setRooms(newFlat.getRooms());
         flat.setArea(newFlat.getArea());
         flat.setAddress(newFlat.getAddress());

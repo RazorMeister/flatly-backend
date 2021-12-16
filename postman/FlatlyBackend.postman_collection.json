@@ -62,7 +62,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/flats",
+							"raw": "{{URL}}/api/v1/flats?page=1&search=Nida Lyte",
 							"host": [
 								"{{URL}}"
 							],
@@ -70,6 +70,16 @@
 								"api",
 								"v1",
 								"flats"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "Nida Lyte"
+								}
 							]
 						}
 					},
@@ -81,7 +91,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/flats/52",
+							"raw": "{{URL}}/api/v1/flats/18",
 							"host": [
 								"{{URL}}"
 							],
@@ -89,7 +99,7 @@
 								"api",
 								"v1",
 								"flats",
-								"52"
+								"18"
 							]
 						}
 					},
@@ -102,7 +112,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Super new flat\",\r\n    \"rooms\": 99,\r\n    \"area\": 9999,\r\n    \"description\": \"Super long descriptoon bla bla bla\",\r\n    \"address\": {\r\n        \"streetName\": \"Parkowa\",\r\n        \"houseNumber\": \"19\",\r\n        \"postalCode\": \"23-400\",\r\n        \"city\": \"Biłgoraj\"\r\n    },\r\n    \"facilities\": [\r\n        8, 9, 11\r\n    ],\r\n    \"images\": [\r\n        63, 64\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Super new flat\",\r\n    \"rooms\": 99,\r\n    \"area\": 9999,\r\n    \"numberOfGuests\": 11,\r\n    \"active\": true,\r\n    \"startDateTime\": \"2021-12-16T17:01:23\",\r\n    \"endDateTime\": \"2022-03-16T17:01:23\",\r\n    \"description\": \"Super long descriptoon bla bla bla\",\r\n    \"address\": {\r\n        \"streetName\": \"Parkowa\",\r\n        \"houseNumber\": \"19\",\r\n        \"postalCode\": \"23-400\",\r\n        \"city\": \"Biłgoraj\"\r\n    },\r\n    \"facilities\": [\r\n        8, 9, 11\r\n    ],\r\n    \"images\": [\r\n        \r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -130,7 +140,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Super new flat UPDATED\",\r\n    \"rooms\": 33,\r\n    \"area\": 3333,\r\n    \"description\": \"Super long descriptoon bla bla bla UPDATED\",\r\n    \"address\": {\r\n        \"streetName\": \"Parkowa XDDD\",\r\n        \"houseNumber\": \"19\",\r\n        \"postalCode\": \"23-400\",\r\n        \"city\": \"Biłgoraj UPDATED\"\r\n    },\r\n    \"facilities\": [\r\n        8, 9, 4\r\n    ],\r\n    \"images\": [\r\n        63\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Super new flat UPDATED\",\r\n    \"rooms\": 33,\r\n    \"area\": 3333,\r\n    \"numberOfGuests\": 11,\r\n    \"active\": false,\r\n    \"startDateTime\": \"2021-12-16T17:01:23\",\r\n    \"endDateTime\": \"2022-03-16T17:01:23\",\r\n    \"description\": \"Super long descriptoon bla bla bla UPDATED\",\r\n    \"address\": {\r\n        \"streetName\": \"Parkowa XDDD\",\r\n        \"houseNumber\": \"19\",\r\n        \"postalCode\": \"23-400\",\r\n        \"city\": \"Biłgoraj UPDATED\"\r\n    },\r\n    \"facilities\": [\r\n        8, 9, 4\r\n    ],\r\n    \"images\": [\r\n        \r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,7 +148,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/flats/65",
+							"raw": "{{URL}}/api/v1/flats/55",
 							"host": [
 								"{{URL}}"
 							],
@@ -146,7 +156,7 @@
 								"api",
 								"v1",
 								"flats",
-								"65"
+								"55"
 							]
 						}
 					},
@@ -216,13 +226,13 @@
 				"type": "apikey",
 				"apikey": [
 					{
-						"key": "key",
-						"value": "Authentication",
+						"key": "value",
+						"value": "{{FLATLY_API_TOKEN}}",
 						"type": "string"
 					},
 					{
-						"key": "value",
-						"value": "{{FLATLY_API_TOKEN}}",
+						"key": "key",
+						"value": "Authentication",
 						"type": "string"
 					}
 				]
@@ -256,6 +266,16 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/F:/Tymek/Images/25914.jpg"
+								}
+							]
+						},
 						"url": {
 							"raw": "{{URL}}/api/v1/images",
 							"host": [
