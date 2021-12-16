@@ -1,6 +1,12 @@
 package pw2021.backend.Flatly.enities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import pw2021.backend.Flatly.utils.JsonDateDeserializer;
+import pw2021.backend.Flatly.utils.JsonDateSerializer;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +18,17 @@ public class Flat {
     private Long id;
     private String name;
     private Integer rooms;
+    private Integer numberOfGuests;
+    private Boolean active;
+
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime startDateTime;
+    
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime endDateTime;
+
     private Integer area;
     private String description;
 
@@ -36,22 +53,30 @@ public class Flat {
     public Flat() {
     }
 
-    public Flat(String name, Integer rooms, Integer area, String description, Address address) {
+    public Flat(String name, Integer rooms, Integer numberOfGuests, Boolean active, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer area, String description, Address address, Set<Facility> facilities, Set<Image> images) {
         this.name = name;
         this.rooms = rooms;
-        this.area = area;
-        this.description = description;
-        this.address = address;
-    }
-
-    public Flat(Long id, String name, Integer rooms, Integer area, String description, Address address, Set<Facility> facilities) {
-        this.id = id;
-        this.name = name;
-        this.rooms = rooms;
+        this.numberOfGuests = numberOfGuests;
+        this.active = active;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.area = area;
         this.description = description;
         this.address = address;
         this.facilities = facilities;
+        this.images = images;
+    }
+
+    public Flat(String name, Integer rooms, Integer numberOfGuests, Boolean active, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer area, String description, Address address) {
+        this.name = name;
+        this.rooms = rooms;
+        this.numberOfGuests = numberOfGuests;
+        this.active = active;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.area = area;
+        this.description = description;
+        this.address = address;
     }
 
     public Long getId() {
@@ -76,6 +101,38 @@ public class Flat {
 
     public void setRooms(Integer rooms) {
         this.rooms = rooms;
+    }
+
+    public Integer getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public void setNumberOfGuests(Integer numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
     public Integer getArea() {
@@ -136,6 +193,10 @@ public class Flat {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", rooms=" + rooms +
+                ", numberOfGuests=" + numberOfGuests +
+                ", active=" + active +
+                ", startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
                 ", area=" + area +
                 ", description='" + description + '\'' +
                 ", address=" + address +

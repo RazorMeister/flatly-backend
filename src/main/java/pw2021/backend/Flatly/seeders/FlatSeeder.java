@@ -1,12 +1,15 @@
 package pw2021.backend.Flatly.seeders;
 
 import com.github.javafaker.Faker;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Component;
 import pw2021.backend.Flatly.enities.Address;
 import pw2021.backend.Flatly.enities.Flat;
 import pw2021.backend.Flatly.repositories.FlatRepository;
+import pw2021.backend.Flatly.utils.DataConverter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -29,6 +32,10 @@ public class FlatSeeder extends BasicSeeder<FlatRepository, Flat> {
             Flat newFlat = new Flat(
                     faker.funnyName().name(),
                     faker.number().numberBetween(3, 100),
+                    faker.number().numberBetween(3, 100),
+                    true,
+                    DataConverter.convertToLocalDateTime(new Date()),
+                    DataConverter.convertToLocalDateTime(DateUtils.addMonths(new Date(), 3)),
                     faker.number().numberBetween(30, 300),
                     faker.shakespeare().hamletQuote(),
                     newAddress

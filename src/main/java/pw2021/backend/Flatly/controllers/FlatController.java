@@ -7,10 +7,12 @@ import pw2021.backend.Flatly.enities.Flat;
 import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.exceptions.UnauthorizedException;
 import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
+import pw2021.backend.Flatly.responses.PaginationResponse;
 import pw2021.backend.Flatly.services.FlatService;
 import pw2021.backend.Flatly.services.SecurityProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "flats")
@@ -25,9 +27,13 @@ public class FlatController {
     }
 
     @GetMapping
-    public List<Flat> getFlats(@RequestHeader HttpHeaders headers) throws UnauthorizedException {
+    public PaginationResponse<List<Flat>> getFlats(
+            @RequestHeader HttpHeaders headers,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("search") Optional<String> search
+    ) throws UnauthorizedException {
         this.securityService.checkAuthenticated(headers);
-        return this.flatService.getFlats();
+        return this.flatService.getFlats(page, search);
     }
 
     @GetMapping(path = "{flatId}")
