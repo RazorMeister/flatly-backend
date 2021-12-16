@@ -24,7 +24,7 @@ public class Flat {
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime startDateTime;
-    
+
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime endDateTime;
