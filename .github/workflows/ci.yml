@@ -1,0 +1,105 @@
+# A pipeline to 
+# 1. build the project
+# 2. deploy the build to our VM
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main, develop ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # build the Flatly project
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Build the flatly backend with Maven
+        run: | 
+          echo "Building the flatly backend"
+          mvn install -DskipTests
+          
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend
+          path: '${{ github.workspace }}/target/*.jar'
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: backend
+        
+      - name: Stop flatly.service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: 22
+          script: |
+            echo "[CI] Stopping service flatly"
+            echo "[CI] Stopping service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo systemctl stop flatly
+            echo "[CI] Stopped service flatly"
+            echo "[CI] Stopped service flatly" >> /home/flatly/backend/logs/flatly.log
+            
+      - name: create backup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: 22
+          script: |
+            echo "[CI] create backup"
+            echo "[CI] create backup" >> /home/flatly/backend/logs/flatly.log
+            find /home/flatly/backend -name "*.jar" -exec mv {} flatly.backup \;
+            
+      - name: copy .jar files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: 22
+          source: "*.jar"
+          target: "/home/flatly/backend"
+      
+      - name: Restore backup
+        if: ${{ failure() }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: 22
+          script: |
+            echo "[CI] restore backup"
+            echo "[CI] restore backup" >> /home/flatly/backend/logs/flatly.log
+            find /home/flatly/backend -name "*.jar" -exec rm {} \;
+            cp /home/flatly/backend/flatly.backup /home/flatly/backend/flatly.jar
+      - name: cleanup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          key: ${{ secrets.HOST_KEY }}
+          port: 22
+          script: |
+            echo "[CI] remove backup"
+            echo "[CI] remove backup" >> /home/flatly/backend/logs/flatly.log
+            rm /home/flatly/backend/flatly.backup
+            echo "[CI] Starting service flatly"
+            echo "[CI] Starting service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo systemctl start flatly
