@@ -62,7 +62,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/flats?page=1&search=Nida Lyte",
+							"raw": "{{URL}}/api/v1/flats?page=1",
 							"host": [
 								"{{URL}}"
 							],
@@ -78,7 +78,8 @@
 								},
 								{
 									"key": "search",
-									"value": "Nida Lyte"
+									"value": "Nida Lyte",
+									"disabled": true
 								}
 							]
 						}
@@ -157,6 +158,26 @@
 								"v1",
 								"flats",
 								"55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flat",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/flats/14",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flats",
+								"14"
 							]
 						}
 					},

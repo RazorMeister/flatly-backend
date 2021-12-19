@@ -107,9 +107,13 @@ public class FlatService {
         return this.saveWithFacilitiesAndImages(flat);
     }
 
-    public void deleteFlat(long flatId) throws NotFoundException {
+    @Transactional
+    public String deleteFlat(long flatId) throws NotFoundException {
         Flat flat = this.getFlat(flatId);
+        flat.setFacilities(new HashSet<Facility>());
+        flat.setImages(new HashSet<Image>());
         this.flatRepository.delete(flat);
+        return "deleted";
     }
 
     @Transactional
