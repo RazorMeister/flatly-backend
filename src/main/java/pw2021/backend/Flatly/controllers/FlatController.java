@@ -58,9 +58,9 @@ public class FlatController {
     }
 
     @DeleteMapping(path = "{flatId}")
-    public void deleteFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId)
+    public String deleteFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId)
             throws NotFoundException, UnauthorizedException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
-        this.flatService.deleteFlat(flatId);
+        return this.flatService.deleteFlat(flatId);
     }
 }
