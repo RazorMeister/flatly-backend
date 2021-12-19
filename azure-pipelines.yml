@@ -1,0 +1,88 @@
+# An Azure pipeline to 
+# 1. build the project
+# 2. deploy the build to our VM
+
+trigger:
+- main
+- develop
+
+pool:
+  vmImage: ubuntu-latest
+  
+jobs:
+- job: Build
+  displayName: Build Flatly Backend
+  steps:
+    - script: |
+        echo "Building the flatly backend"
+        mvn install -DskipTests
+      displayName: 'Build the flatly backend with Maven'
+    
+    - task: CopyFiles@2
+      displayName: 'Copy built .jar to staging directory'
+      inputs:
+        SourceFolder: '($System.DefaultWorkingDirectory)'
+        Contents: '**/target/*.?(war|jar)'
+        TargetFolder: $(Build.ArtifactStagingDirectory)
+    
+    - upload: $(Build.ArtifactStagingDirectory)
+      displayName: 'Upload Artifacts'
+      artifact: flatly
+    
+- deployment: DeployToVM
+  displayName: 'Deploy to VM'
+  dependsOn: Build
+  environment: 
+    name: Flatly
+    resourceType: VirtualMachine
+    tags: flatly
+  strategy: 
+    runOnce:
+      preDeploy:
+        steps:
+        - download: current
+          artifact: flatly
+          displayName: 'Download Artifacts'
+      deploy:
+        steps:
+        - script: |
+            echo "[CI] Stopping service flatly"
+            echo "[CI] Stopping service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo systemctl stop flatly
+            echo "[CI] Stopped service flatly"
+            echo "[CI] Stopped service flatly" >> /home/flatly/backend/logs/flatly.log
+          displayName: 'Stop flatly.service'
+
+        - script : |
+            echo "[CI] create backup"
+            echo "[CI] create backup" >> /home/flatly/backend/logs/flatly.log
+            find /home/flatly/backend -name "*.jar" -exec mv {} flatly.backup \;
+          displayName: 'Create backend backup'
+          
+        - script : |
+            echo "[CI] copy .jar files"
+            echo "[CI] copy .jar files" >> /home/flatly/backend/logs/flatly.log
+            cp $(Pipeline.Workspace)/flatly/**/target/*.jar /homr/flatly/backend/
+
+      on:
+        failure:
+          steps:
+          - script: |
+              echo "[CI] restore backup"
+              echo "[CI] restore backup" >> /home/flatly/backend/logs/flatly.log
+              find /home/flatly/backend -name "*.jar" -exec rm {} \;
+              mv /home/flatly/backend/flatly.backup /home/flatly/backend/flatly.jar
+              echo "[CI] Starting service flatly"
+              echo "[CI] Starting service flatly" >> /home/flatly/backend/logs/flatly.log
+              sudo systemctl start flatly
+            displayName: 'Restore Backup'
+        success:
+          steps:
+          - script: |
+              echo "[CI] remove backup"
+              echo "[CI] remove backup" >> /home/flatly/backend/logs/flatly.log
+              rm /home/flatly/backend/flatly.backup
+              echo "[CI] Starting service flatly"
+              echo "[CI] Starting service flatly" >> /home/flatly/backend/logs/flatly.log
+              sudo systemctl start flatly
+            displayName: 'Restore Backup'
