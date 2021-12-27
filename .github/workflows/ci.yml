@@ -3,6 +3,9 @@
 # 2. deploy the build to our VM
 
 name: CI
+env:
+  LOGFILE: /home/flatly/drop_zone/www/backend/logs/flatly.log
+  BACKEND_DIR: /home/flatly/drop_zone/www/backend/
 
 # Controls when the workflow will run
 on:
@@ -46,13 +49,14 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_KEY }}
+          envs: LOGFILE
           port: 22
           script: |
-            echo "[CI] Stopping service flatly"
-            echo "[CI] Stopping service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo echo "[CI] Stopping service flatly"
+            sudo echo "[CI] Stopping service flatly" >> $LOGFILE
             sudo systemctl stop flatly
-            echo "[CI] Stopped service flatly"
-            echo "[CI] Stopped service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo echo "[CI] Stopped service flatly"
+            sudo echo "[CI] Stopped service flatly" >> $LOGFILE
             
       - name: create backup
         uses: appleboy/ssh-action@master
@@ -60,11 +64,12 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_KEY }}
+          envs: LOGFILE,BACKEND_DIR
           port: 22
           script: |
-            echo "[CI] create backup"
-            echo "[CI] create backup" >> /home/flatly/backend/logs/flatly.log
-            find /home/flatly/backend -name "*.jar" -exec mv {} flatly.backup \;
+            sudo echo "[CI] create backup"
+            sudo echo "[CI] create backup" >> $LOGFILE
+            sudo find $BACKEND_DIR -name "*.jar" -exec mv {} flatly.backup \;
             
       - name: copy .jar files
         uses: appleboy/scp-action@master
@@ -74,7 +79,7 @@ jobs:
           key: ${{ secrets.HOST_KEY }}
           port: 22
           source: "*.jar"
-          target: "/home/flatly/backend"
+          target: "${{ env.BACKEND_DIR }}"
       
       - name: Restore backup
         if: ${{ failure() }}
@@ -83,23 +88,25 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_KEY }}
+          envs: LOGFILE,BACKEND_DIR
           port: 22
           script: |
-            echo "[CI] restore backup"
-            echo "[CI] restore backup" >> /home/flatly/backend/logs/flatly.log
-            find /home/flatly/backend -name "*.jar" -exec rm {} \;
-            cp /home/flatly/backend/flatly.backup /home/flatly/backend/flatly.jar
+            sudo echo "[CI] restore backup"
+            sudo echo "[CI] restore backup" >> $LOGFILE
+            sudo find $BACKEND_DIR -name "*.jar" -exec rm {} \;
+            sudo cp $BACKEND_DIR/flatly.backup $BACKEND_DIR/flatly.jar
       - name: cleanup
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.HOST_KEY }}
+          envs: LOGFILE,BACKEND_DIR
           port: 22
           script: |
-            echo "[CI] remove backup"
-            echo "[CI] remove backup" >> /home/flatly/backend/logs/flatly.log
-            rm /home/flatly/backend/flatly.backup
-            echo "[CI] Starting service flatly"
-            echo "[CI] Starting service flatly" >> /home/flatly/backend/logs/flatly.log
+            sudo echo "[CI] remove backup"
+            sudo echo "[CI] remove backup" >> $LOGLFILE
+            sudo rm $BACKEND_DIR/flatly.backup
+            sudo echo "[CI] Starting service flatly"
+            sudo echo "[CI] Starting service flatly" >> $LOGFILE
             sudo systemctl start flatly
