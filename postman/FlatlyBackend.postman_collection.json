@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1f48ca6a-096e-4bdb-962c-13626fb9f817",
+		"_postman_id": "bc9fbf62-6d5b-4930-bf22-f9d0fd510fc2",
 		"name": "FlatlyBackend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -310,6 +310,101 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "Show bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/bookings?page=1&active=1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "Nida Lyte",
+									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "1",
+									"description": "1 | 0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show flat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/bookings/55",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bookings",
+								"55"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "key",
+						"value": "Authentication",
+						"type": "string"
+					},
+					{
+						"key": "value",
+						"value": "{{FLATLY_API_TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
