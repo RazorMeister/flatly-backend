@@ -17,17 +17,19 @@ public class DatabaseSeeder implements CommandLineRunner {
             UserSeeder userSeeder,
             FacilitySeeder facilitySeeder,
             FlatSeeder flatSeeder,
-            FlatFacilitySeeder flatFacilitySeeder
+            FlatFacilitySeeder flatFacilitySeeder,
+            BookingSeeder bookingSeeder
     ) {
         this.seeders.add(userSeeder);
         this.seeders.add(facilitySeeder);
         this.seeders.add(flatSeeder);
+        this.seeders.add(bookingSeeder);
         this.seeders.add(flatFacilitySeeder);
     }
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         this.seeders.forEach(Runnable::run);
     }
 }
