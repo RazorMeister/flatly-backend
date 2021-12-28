@@ -56,4 +56,14 @@ public class BookingService {
     public Booking storeBooking(Booking booking) throws UnprocessableEntityException {
         return booking;
     }
+
+    public String cancelBooking(long id) throws NotFoundException, UnprocessableEntityException {
+        Booking booking = this.getBooking(id);
+        if (!booking.getActive()) {
+            throw new UnprocessableEntityException("Booking has been already canceled");
+        }
+        booking.setActive(false);
+        this.bookingRepository.save(booking);
+        return "Booking canceled";
+    }
 }

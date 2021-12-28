@@ -44,6 +44,13 @@ public class BookingController {
         return this.bookingService.getBooking(bookingId);
     }
 
+    @DeleteMapping(path = "{bookingId}")
+    public String cancelBooking(@RequestHeader HttpHeaders headers, @PathVariable long bookingId)
+            throws UnauthorizedException, UnprocessableEntityException, NotFoundException {
+        this.securityService.checkAuthenticated(headers);
+        return this.bookingService.cancelBooking(bookingId);
+    }
+
     @PostMapping
     public Booking storeBooking(@RequestHeader HttpHeaders headers, @RequestBody Booking booking)
             throws UnprocessableEntityException, UnauthorizedException {
