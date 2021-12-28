@@ -12,7 +12,6 @@ public class User {
     private String password;
     private String firstName;
     private String secondName;
-    private String securityToken;
     private boolean isAdmin;
 
     public User() {
@@ -24,15 +23,13 @@ public class User {
             String login,
             String password,
             String firstName,
-            String secondName,
-            String securityToken
+            String secondName
     ) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.firstName = firstName;
         this.secondName = secondName;
-        this.securityToken = securityToken;
     }
 
     public User(
@@ -89,14 +86,6 @@ public class User {
         this.secondName = secondName;
     }
 
-    public String getSecurityToken() {
-        return securityToken;
-    }
-
-    public void setSecurityToken(String securityToken) {
-        this.securityToken = securityToken;
-    }
-
     public boolean getIsAdmin() {
         return isAdmin;
     }
@@ -113,7 +102,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", securityToken='" + securityToken + '\'' +
                 ", isAdmin='" + isAdmin + '\'' +
                 '}';
     }
