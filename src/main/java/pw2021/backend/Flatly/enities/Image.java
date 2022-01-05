@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "images")
-public class Image {
+public class Image implements Comparable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -44,5 +44,11 @@ public class Image {
                 "id=" + id +
                 ", path='" + path + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Image b = (Image)o;
+        return this.getId().compareTo(b.getId());
     }
 }

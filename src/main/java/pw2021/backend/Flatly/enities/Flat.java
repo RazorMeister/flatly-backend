@@ -7,8 +7,11 @@ import pw2021.backend.Flatly.utils.JsonDateSerializer;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "flats")
@@ -176,7 +179,7 @@ public class Flat {
     }
 
     public Set<Image> getImages() {
-        return images;
+        return images.stream().sorted(Image::compareTo).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public void setImages(Set<Image> images) {
