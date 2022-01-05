@@ -16,6 +16,7 @@ import pw2021.backend.Flatly.responses.PaginationResponse;
 import pw2021.backend.Flatly.utils.DataConverter;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -89,7 +90,8 @@ public class FlatService {
     }
 
     @Transactional
-    public Flat updateFlat(long flatId, Flat newFlat) throws NotFoundException, UnprocessableEntityException {
+    public Flat updateFlat(long flatId, Flat newFlat)
+            throws NotFoundException, UnprocessableEntityException, IOException {
         Flat flat = this.getFlat(flatId);
 
         flat.setName(newFlat.getName());
@@ -102,14 +104,24 @@ public class FlatService {
         flat.setArea(newFlat.getArea());
         flat.setAddress(newFlat.getAddress());
         flat.setFacilities(newFlat.getFacilities());
+
+        // Delete images that are not more used
+        Set<Image> imagesToDelete = flat.getImages();
+        imagesToDelete.removeAll(newFlat.getImages());
+        this.imageService.deleteImages(imagesToDelete);
+
         flat.setImages(newFlat.getImages());
 
         return this.saveWithFacilitiesAndImages(flat);
     }
 
     @Transactional
-    public String deleteFlat(long flatId) throws NotFoundException {
+    public String deleteFlat(long flatId)
+            throws NotFoundException, IOException {
         Flat flat = this.getFlat(flatId);
+
+        this.imageService.deleteImages(flat.getImages());
+
         flat.setFacilities(new HashSet<Facility>());
         flat.setImages(new HashSet<Image>());
         this.flatRepository.delete(flat);
