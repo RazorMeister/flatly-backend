@@ -11,6 +11,7 @@ import pw2021.backend.Flatly.responses.PaginationResponse;
 import pw2021.backend.Flatly.services.FlatService;
 import pw2021.backend.Flatly.services.SecurityProvider;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,14 +53,14 @@ public class FlatController {
 
     @PutMapping(path = "{flatId}")
     public Flat updateFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId, @RequestBody Flat flat)
-            throws NotFoundException, UnprocessableEntityException, UnauthorizedException {
+            throws NotFoundException, UnprocessableEntityException, UnauthorizedException, IOException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.updateFlat(flatId, flat);
     }
 
     @DeleteMapping(path = "{flatId}")
     public String deleteFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId)
-            throws NotFoundException, UnauthorizedException {
+            throws NotFoundException, UnauthorizedException, IOException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.deleteFlat(flatId);
     }

@@ -7,7 +7,10 @@ import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.repositories.FileSystemRepository;
 import pw2021.backend.Flatly.repositories.ImageRepository;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ImageService {
@@ -34,5 +37,25 @@ public class ImageService {
         }
 
         return imageOptional.get();
+    }
+
+    public void deleteImages(Set<Image> images) throws NotFoundException, IOException {
+        for (Image image : images)
+            this.deleteImage(image.getId());
+    }
+
+    public void deleteImage(Long id) throws NotFoundException, IOException {
+        Optional<Image> imageOptional = this.imageRepository.findById(id);
+
+        if (imageOptional.isEmpty()) {
+            throw new NotFoundException(String.format("Image with id: %d does not exist", id));
+        }
+
+        try {
+            this.fileSystemRepository.remove(imageOptional.get().getPath());
+        } catch (NoSuchFileException ignored) {
+        }
+
+        this.imageRepository.delete(imageOptional.get());
     }
 }
