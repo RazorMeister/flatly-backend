@@ -19,7 +19,11 @@ public class Booking {
 
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
-    private LocalDateTime startDateTime;
+    private LocalDateTime checkInDate;
+
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime checkOutDate;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "flatId")
@@ -30,9 +34,14 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(String userData, LocalDateTime startDateTime, Flat flat, boolean active) {
+    public Booking(String userData,
+                   LocalDateTime checkInDate,
+                   LocalDateTime checkOutDate,
+                   Flat flat,
+                   boolean active) {
         this.userData = userData;
-        this.startDateTime = startDateTime;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
         this.flat = flat;
         this.active = active;
     }
@@ -53,12 +62,20 @@ public class Booking {
         this.userData = userData;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public LocalDateTime getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setCheckInDate(LocalDateTime checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public LocalDateTime getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(LocalDateTime checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 
     public Flat getFlat() {
@@ -82,7 +99,8 @@ public class Booking {
         return "Booking{" +
                 "id=" + id +
                 ", userData='" + userData + '\'' +
-                ", startDateTime=" + startDateTime +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
                 ", flat=" + flat +
                 ", active=" + active +
                 '}';
