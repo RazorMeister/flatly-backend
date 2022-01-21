@@ -5,12 +5,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Component;
 import pw2021.backend.Flatly.enities.Address;
 import pw2021.backend.Flatly.enities.Flat;
+import pw2021.backend.Flatly.enities.Image;
 import pw2021.backend.Flatly.repositories.FlatRepository;
 import pw2021.backend.Flatly.utils.DataConverter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class FlatSeeder extends BasicSeeder<FlatRepository, Flat> {
@@ -29,6 +28,10 @@ public class FlatSeeder extends BasicSeeder<FlatRepository, Flat> {
                     faker.address().city()
             );
 
+            Image img1 = new Image("https://backend.flatly.online/api/v1/flatsStock/inside1.jpg");
+            Image img2 = new Image("https://backend.flatly.online/api/v1/flatsStock/inside2.jpg");
+            Image img3 = new Image("https://backend.flatly.online/api/v1/flatsStock/outside1.jpg");
+
             Flat newFlat = new Flat(
                     faker.funnyName().name(),
                     faker.number().numberBetween(3, 100),
@@ -41,6 +44,7 @@ public class FlatSeeder extends BasicSeeder<FlatRepository, Flat> {
                     newAddress
             );
 
+            newFlat.setImages(new LinkedHashSet<Image>(Arrays.asList(img1, img2, img3)));
             flats.add(newFlat);
         }
 

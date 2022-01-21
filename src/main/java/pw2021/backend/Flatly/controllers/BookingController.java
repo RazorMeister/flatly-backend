@@ -31,10 +31,11 @@ public class BookingController {
             @RequestHeader HttpHeaders headers,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("search") Optional<String> search,
+            @RequestParam("id") Optional<Long> id,
             @RequestParam("active") Optional<Boolean> active
     ) throws UnauthorizedException {
         this.securityService.checkAuthenticated(headers);
-        return this.bookingService.getBookings(page, search, active);
+        return this.bookingService.getBookings(page, search, id, active);
     }
 
     @GetMapping(path = "{bookingId}")

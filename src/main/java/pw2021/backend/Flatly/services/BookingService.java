@@ -31,11 +31,18 @@ public class BookingService {
     public PaginationResponse<List<Booking>> getBookings(
             Optional<Integer> page,
             Optional<String> search,
+            Optional<Long> id,
             Optional<Boolean> active
     ) {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, this.RECORDS_ON_PAGE);
-        Page<Booking> bookingsPage = this.bookingRepository
+
+        Page<Booking> bookingsPage;
+        if (id.isEmpty())
+            bookingsPage = this.bookingRepository
                 .findBookingsByNameAndActive(search.orElse(""), active.orElse(true), pageable);
+        else
+            bookingsPage = this.bookingRepository
+                    .findBookingsById(id.get(), pageable);
 
         return new PaginationResponse<>(
                 bookingsPage.getContent(),
