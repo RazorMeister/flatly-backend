@@ -2,6 +2,7 @@ package pw2021.backend.Flatly.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import pw2021.backend.Flatly.utils.DataConverter;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FlatService {
@@ -66,12 +68,20 @@ public class FlatService {
         return this.flatRepository.save(savedFlat);
     }
 
-    public PaginationResponse<List<Flat>> getFlats(Optional<Integer> page, Optional<String> search) {
+    public PaginationResponse<List<Flat>> getFlats(Optional<Integer> page, Optional<String> name, Optional<String> city, Optional<String> street, Optional<Boolean> sortedByRooms) {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, this.RECORDS_ON_PAGE);
-        Page<Flat> flatsPage = this.flatRepository.findFlatsByName(search.orElse(""), pageable);
+        Page<Flat> findFlats;
+
+        if (sortedByRooms.isEmpty())
+            findFlats = this.flatRepository.findFlats(name.orElse(""), city.orElse(""), street.orElse(""), pageable);
+        else if (sortedByRooms.get())
+            findFlats = this.flatRepository.findFlatsSortedAscending(name.orElse(""), city.orElse(""), street.orElse(""), pageable);
+        else
+            findFlats = this.flatRepository.findFlatsSortedDescending(name.orElse(""), city.orElse(""), street.orElse(""), pageable);
+
         return new PaginationResponse<>(
-                flatsPage.getContent(),
-                new PaginationData(flatsPage)
+                findFlats.getContent(),
+                new PaginationData(findFlats)
         );
     }
 

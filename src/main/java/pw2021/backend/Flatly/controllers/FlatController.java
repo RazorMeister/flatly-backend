@@ -31,10 +31,13 @@ public class FlatController {
     public PaginationResponse<List<Flat>> getFlats(
             @RequestHeader HttpHeaders headers,
             @RequestParam("page") Optional<Integer> page,
-            @RequestParam("search") Optional<String> search
+            @RequestParam("name") Optional<String> name,
+            @RequestParam("city") Optional<String> city,
+            @RequestParam("street") Optional<String> street,
+            @RequestParam("sorted") Optional<Boolean> sorted
     ) throws UnauthorizedException {
         this.securityService.checkAuthenticated(headers);
-        return this.flatService.getFlats(page, search);
+        return this.flatService.getFlats(page, name, city, street, sorted);
     }
 
     @GetMapping(path = "{flatId}")
