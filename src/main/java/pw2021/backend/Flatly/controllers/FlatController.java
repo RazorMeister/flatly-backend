@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import pw2021.backend.Flatly.enities.Flat;
+import pw2021.backend.Flatly.exceptions.ForbiddenException;
 import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.exceptions.UnauthorizedException;
 import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
@@ -49,21 +50,21 @@ public class FlatController {
 
     @PostMapping
     public Flat storeFlat(@RequestHeader HttpHeaders headers, @RequestBody Flat flat)
-            throws UnprocessableEntityException, UnauthorizedException {
+            throws UnprocessableEntityException, UnauthorizedException, ForbiddenException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.storeFlat(flat);
     }
 
     @PutMapping(path = "{flatId}")
     public Flat updateFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId, @RequestBody Flat flat)
-            throws NotFoundException, UnprocessableEntityException, UnauthorizedException, IOException {
+            throws NotFoundException, UnprocessableEntityException, UnauthorizedException, IOException, ForbiddenException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.updateFlat(flatId, flat);
     }
 
     @DeleteMapping(path = "{flatId}")
     public String deleteFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId)
-            throws NotFoundException, UnauthorizedException, IOException {
+            throws NotFoundException, UnauthorizedException, IOException, ForbiddenException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.deleteFlat(flatId);
     }

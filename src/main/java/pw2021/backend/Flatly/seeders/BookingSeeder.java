@@ -46,7 +46,6 @@ public class BookingSeeder extends BasicSeeder<BookingRepository, Booking> {
                 String.format("%s %s %s",
                         faker.name().firstName(), faker.name().lastName(), faker.phoneNumber().cellPhone()),
                 DataConverter.convertToLocalDateTime(DateUtils.addDays(new Date(), faker.random().nextInt(0, 50))),
-                DataConverter.convertToLocalDateTime(DateUtils.addDays(new Date(), faker.random().nextInt(50, 100))),
                 newFlat,
                 faker.bool().bool()
             );

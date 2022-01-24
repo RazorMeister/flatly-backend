@@ -11,7 +11,7 @@ public class UserSeeder extends BasicSeeder<UserRepository, User> {
     @Override
     protected List<User> getSeeders() {
         return List.of(
-                new User("john@doe.com", "password", "Main", "Admin", true),
+                new User("john@doe.com", "password#1234", "Main", "Admin", true),
                 new User("external@admin.com", "password", "External", "Admin", false)
         );
     }

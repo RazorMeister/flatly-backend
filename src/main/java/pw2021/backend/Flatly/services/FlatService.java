@@ -68,7 +68,13 @@ public class FlatService {
         return this.flatRepository.save(savedFlat);
     }
 
-    public PaginationResponse<List<Flat>> getFlats(Optional<Integer> page, Optional<String> name, Optional<String> city, Optional<String> street, Optional<Boolean> sortedByRooms) {
+    public PaginationResponse<List<Flat>> getFlats(
+            Optional<Integer> page,
+            Optional<String> name,
+            Optional<String> city,
+            Optional<String> street,
+            Optional<Boolean> sortedByRooms
+    ) {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, this.RECORDS_ON_PAGE);
         Page<Flat> findFlats;
 
