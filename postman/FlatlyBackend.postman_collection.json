@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1d46cf99-be5a-42ca-8261-991868f1b7ac",
+		"_postman_id": "882651eb-be31-4192-834c-ea533821a9f9",
 		"name": "FlatlyBackend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -74,11 +74,31 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"description": "OPTIONAL | page number | int"
 								},
 								{
 									"key": "search",
 									"value": "Nida Lyte",
+									"description": "OPTIONAL | search string | string",
+									"disabled": true
+								},
+								{
+									"key": "sorted",
+									"value": "1",
+									"description": "OPTIONAL | sorted by room number | bool",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": null,
+									"description": "OPTIONAL | string",
+									"disabled": true
+								},
+								{
+									"key": "street",
+									"value": "Parkowa",
+									"description": "OPTIONAL | string",
 									"disabled": true
 								}
 							]
@@ -377,7 +397,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/bookings/55",
+							"raw": "{{URL}}/api/v1/bookings/174",
 							"host": [
 								"{{URL}}"
 							],
@@ -385,7 +405,35 @@
 								"api",
 								"v1",
 								"bookings",
-								"55"
+								"174"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userData\": \"\",\r\n    \"startDateTime\": \"2022-01-21T17:01:23\",\r\n    \"flat\": {\r\n        \"id\": 12\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/bookings",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bookings"
 							]
 						}
 					},

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pw2021.backend.Flatly.enities.Booking;
+import pw2021.backend.Flatly.enities.Flat;
 import pw2021.backend.Flatly.exceptions.NotFoundException;
 import pw2021.backend.Flatly.exceptions.UnprocessableEntityException;
 import pw2021.backend.Flatly.repositories.BookingRepository;
@@ -18,14 +19,17 @@ import java.util.*;
 @Service
 public class BookingService {
     private final BookingRepository bookingRepository;
+    private final FlatService flatService;
 
     private final Integer RECORDS_ON_PAGE = 10;
 
     @Autowired
     public BookingService(
-            BookingRepository bookingRepository
+        BookingRepository bookingRepository,
+        FlatService flatService
     ) {
         this.bookingRepository = bookingRepository;
+        this.flatService = flatService;
     }
 
     public PaginationResponse<List<Booking>> getBookings(
@@ -60,7 +64,19 @@ public class BookingService {
     }
 
     @Transactional
-    public Booking storeBooking(Booking booking) throws UnprocessableEntityException {
+    public Booking storeBooking(Booking booking) throws UnprocessableEntityException, NotFoundException {
+        Flat flat = this.flatService.getFlat(booking.getFlat().getId());
+
+        if (!flat.getActive()) {
+            throw new UnprocessableEntityException("Provided flat is not active any more");
+        }
+
+        flat.setActive(false);
+
+        booking.setFlat(flat);
+        booking.setActive(true);
+        this.bookingRepository.save(booking);
+
         return booking;
     }
 

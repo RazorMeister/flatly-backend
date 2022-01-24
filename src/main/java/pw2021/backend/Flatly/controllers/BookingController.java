@@ -54,8 +54,8 @@ public class BookingController {
 
     @PostMapping
     public Booking storeBooking(@RequestHeader HttpHeaders headers, @RequestBody Booking booking)
-            throws UnprocessableEntityException, UnauthorizedException {
-        this.securityService.checkAuthenticatedAndMainAdmin(headers);
+            throws UnprocessableEntityException, UnauthorizedException, NotFoundException {
+        this.securityService.checkAuthenticated(headers);
         return this.bookingService.storeBooking(booking);
     }
 }
