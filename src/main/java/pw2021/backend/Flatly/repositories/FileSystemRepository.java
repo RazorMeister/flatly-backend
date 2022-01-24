@@ -2,7 +2,6 @@ package pw2021.backend.Flatly.repositories;
 
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,15 +26,19 @@ public class FileSystemRepository {
         return fileName;
     }
 
-    public void remove(String imageName) throws IOException {
-        Path path = Paths.get(
-                Paths.get("").toAbsolutePath().toString(),
-                "target",
-                "classes",
-                "static",
-                imageName
-        );
+    public void remove(String imageName) {
+        try {
+            Path path = Paths.get(
+                    Paths.get("").toAbsolutePath().toString(),
+                    "target",
+                    "classes",
+                    "static",
+                    imageName
+            );
 
-        Files.delete(path);
+            Files.delete(path);
+        } catch (Exception ignored) {
+            // Ignore exception
+        }
     }
 }

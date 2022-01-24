@@ -2,7 +2,6 @@ package pw2021.backend.Flatly.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import pw2021.backend.Flatly.utils.DataConverter;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FlatService {
@@ -107,7 +105,7 @@ public class FlatService {
 
     @Transactional
     public Flat updateFlat(long flatId, Flat newFlat)
-            throws NotFoundException, UnprocessableEntityException, IOException {
+            throws NotFoundException, UnprocessableEntityException {
         Flat flat = this.getFlat(flatId);
 
         flat.setName(newFlat.getName());
