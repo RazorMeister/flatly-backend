@@ -39,22 +39,19 @@ public class ImageService {
         return imageOptional.get();
     }
 
-    public void deleteImages(Set<Image> images) throws NotFoundException, IOException {
+    public void deleteImages(Set<Image> images) throws NotFoundException {
         for (Image image : images)
             this.deleteImage(image.getId());
     }
 
-    public void deleteImage(Long id) throws NotFoundException, IOException {
+    public void deleteImage(Long id) throws NotFoundException {
         Optional<Image> imageOptional = this.imageRepository.findById(id);
 
         if (imageOptional.isEmpty()) {
             throw new NotFoundException(String.format("Image with id: %d does not exist", id));
         }
 
-        try {
-            this.fileSystemRepository.remove(imageOptional.get().getPath());
-        } catch (NoSuchFileException ignored) {
-        }
+        this.fileSystemRepository.remove(imageOptional.get().getPath());
 
         this.imageRepository.delete(imageOptional.get());
     }

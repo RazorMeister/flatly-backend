@@ -57,7 +57,7 @@ public class FlatController {
 
     @PutMapping(path = "{flatId}")
     public Flat updateFlat(@RequestHeader HttpHeaders headers, @PathVariable long flatId, @RequestBody Flat flat)
-            throws NotFoundException, UnprocessableEntityException, UnauthorizedException, IOException, ForbiddenException {
+            throws NotFoundException, UnprocessableEntityException, UnauthorizedException, ForbiddenException {
         this.securityService.checkAuthenticatedAndMainAdmin(headers);
         return this.flatService.updateFlat(flatId, flat);
     }
