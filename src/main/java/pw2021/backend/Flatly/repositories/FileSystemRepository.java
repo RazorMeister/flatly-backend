@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +18,7 @@ public class FileSystemRepository {
     public String save(byte[] content, String imageName) throws Exception {
         String fileName = new Date().getTime() + "-" + imageName;
         Path newFile = Paths.get(
-                Paths.get("").toAbsolutePath().toString(),
+                FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                 "target",
                 "classes",
                 "static",
@@ -36,7 +37,7 @@ public class FileSystemRepository {
     public void remove(String imageName) {
         try {
             Path path = Paths.get(
-                    Paths.get("").toAbsolutePath().toString(),
+                    FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                     "target",
                     "classes",
                     "static",
