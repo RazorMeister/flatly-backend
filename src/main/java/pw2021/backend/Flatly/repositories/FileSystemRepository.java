@@ -1,7 +1,5 @@
 package pw2021.backend.Flatly.repositories;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.nio.file.FileSystems;
@@ -12,21 +10,17 @@ import java.util.Date;
 
 @Repository
 public class FileSystemRepository {
-    Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
-
     public String save(byte[] content, String imageName) throws Exception {
         String fileName = new Date().getTime() + "-" + imageName;
         Path newFile = Paths.get(
-                //FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
+                FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                 "target",
                 "classes",
                 "static",
                 fileName
         );
 
-        this.logger.error(newFile.getParent().toString());
-
-        //Files.createDirectories(newFile.getParent());
+        Files.createDirectories(newFile.getParent());
 
         Files.write(newFile, content);
 
@@ -36,7 +30,7 @@ public class FileSystemRepository {
     public void remove(String imageName) {
         try {
             Path path = Paths.get(
-                    //FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
+                    FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                     "target",
                     "classes",
                     "static",
