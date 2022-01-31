@@ -58,7 +58,7 @@ jobs:
             sudo echo "[CI] Stopped service flatly"
             sudo echo "[CI] Stopped service flatly" >> $LOGFILE
             
-      - name: create backup
+      - name: create backup and create new target
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -70,6 +70,7 @@ jobs:
             sudo echo "[CI] create backup"
             sudo echo "[CI] create backup" >> $LOGFILE
             sudo find $BACKEND_DIR -name "target" -exec mv {} flatly.backup \;
+            sudo mkdir -p $BACKEND_DIR/target
             
       - name: copy target files
         uses: appleboy/scp-action@master
@@ -79,7 +80,7 @@ jobs:
           key: ${{ secrets.HOST_KEY }}
           port: 22
           source: "*"
-          target: "${{ env.BACKEND_DIR }}"
+          target: "${{ env.BACKEND_DIR }}/target"
       
       - name: Restore backup
         if: ${{ failure() }}
