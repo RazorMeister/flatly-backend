@@ -100,6 +100,7 @@ public class FlatService {
 
     @Transactional
     public Flat storeFlat(Flat flat) throws UnprocessableEntityException {
+		flat.setActive(true);
         return this.saveWithFacilitiesAndImages(flat);
     }
 
