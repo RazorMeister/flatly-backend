@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.logging.Level;
 
 @Repository
 public class FileSystemRepository {
@@ -18,7 +17,7 @@ public class FileSystemRepository {
     public String save(byte[] content, String imageName) throws Exception {
         String fileName = new Date().getTime() + "-" + imageName;
         Path newFile = Paths.get(
-                FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
+                //FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                 "target",
                 "classes",
                 "static",
@@ -27,7 +26,7 @@ public class FileSystemRepository {
 
         this.logger.error(newFile.getParent().toString());
 
-        Files.createDirectories(newFile.getParent());
+        //Files.createDirectories(newFile.getParent());
 
         Files.write(newFile, content);
 
@@ -37,7 +36,7 @@ public class FileSystemRepository {
     public void remove(String imageName) {
         try {
             Path path = Paths.get(
-                    FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
+                    //FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                     "target",
                     "classes",
                     "static",
