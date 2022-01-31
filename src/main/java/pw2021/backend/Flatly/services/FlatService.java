@@ -100,6 +100,7 @@ public class FlatService {
 
     @Transactional
     public Flat storeFlat(Flat flat) throws UnprocessableEntityException {
+		flat.setActive(true);
         return this.saveWithFacilitiesAndImages(flat);
     }
 
@@ -120,9 +121,9 @@ public class FlatService {
         flat.setFacilities(newFlat.getFacilities());
 
         // Delete images that are not more used
-        Set<Image> imagesToDelete = flat.getImages();
+        /*Set<Image> imagesToDelete = flat.getImages();
         imagesToDelete.removeAll(newFlat.getImages());
-        this.imageService.deleteImages(imagesToDelete);
+        this.imageService.deleteImages(imagesToDelete);*/
 
         flat.setImages(newFlat.getImages());
 

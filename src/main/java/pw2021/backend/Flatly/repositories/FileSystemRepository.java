@@ -1,30 +1,33 @@
 package pw2021.backend.Flatly.repositories;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Date;
-import java.util.logging.Level;
+import java.util.Optional;
 
 @Repository
 public class FileSystemRepository {
-    Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
+    private Optional<String> getExtensionByStringHandling(String filename) {
+        return Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+    }
 
     public String save(byte[] content, String imageName) throws Exception {
-        String fileName = new Date().getTime() + "-" + imageName;
+        String extension = this.getExtensionByStringHandling(imageName).orElse("png");
+        String fileName = Base64.getEncoder().withoutPadding().encodeToString((new Date().getTime() + "-" + imageName).getBytes()) + "." + extension;
         Path newFile = Paths.get(
-                Paths.get("").toAbsolutePath().toString(),
+                FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                 "target",
                 "classes",
                 "static",
                 fileName
         );
-
-        this.logger.error(newFile.getParent().toString());
 
         Files.createDirectories(newFile.getParent());
 
@@ -36,7 +39,7 @@ public class FileSystemRepository {
     public void remove(String imageName) {
         try {
             Path path = Paths.get(
-                    Paths.get("").toAbsolutePath().toString(),
+                    FileSystems.getDefault().getPath("").toAbsolutePath().toString(),
                     "target",
                     "classes",
                     "static",
